@@ -1,0 +1,111 @@
+/* src/css/AllSongs.css */
+
+/* --- Fondo General (Negro Profundo) --- */
+.all-songs {
+  background-color: #0b0b0b; /* Casi negro absoluto */
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+}
+
+.all-songs h2 {
+  color: #d8b4fe; /* Un lila muy claro para el título */
+  margin-bottom: 30px;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5); /* Resplandor morado */
+}
+
+/* --- La Rejilla (Grid Responsivo) --- */
+.songs-grid {
+  display: grid;
+  /* Las tarjetas tendrán un ancho mínimo de 220px y se ajustan solas */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+/* --- La Tarjeta (Card) --- */
+.song-card {
+  background-color: #1a1a1a; /* Gris muy oscuro para contrastar con el fondo */
+  border-radius: 15px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border: 2px solid transparent; /* Borde invisible para evitar saltos */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Efecto al pasar el mouse (Hover) */
+.song-card:hover {
+  background-color: #252525;
+  transform: translateY(-8px); /* Flota hacia arriba */
+  box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2); /* Sombra morada suave */
+}
+
+/* --- Estado ACTIVO (Cuando suena la canción) --- */
+.song-card.active {
+  background-color: #1e1024; /* Fondo morado muy oscuro */
+  border-color: #a855f7;      /* Borde Morado Neón */
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6); /* Resplandor fuerte */
+}
+
+/* --- Información de la Canción --- */
+.song-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Imagen de portada */
+.song-info img {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Mantiene la imagen cuadrada siempre */
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+}
+
+/* Título */
+.song-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Artista */
+.song-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #a78bfa; /* Morado lavanda */
+  font-weight: 500;
+}
+
+/* Duración y fecha (Spans) */
+.song-info span {
+  font-size: 0.75rem;
+  color: #6b7280; /* Gris para info secundaria */
+  display: inline-block;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+/* --- Icono de Play/Pausa --- */
+.song-card > div:last-child {
+  margin-top: 15px;
+  text-align: right;
+  font-size: 1.8rem;
+  /* Animación suave para el icono */
+  transition: transform 0.2s;
+}
+
+.song-card:hover > div:last-child {
+  transform: scale(1.1);
+}

@@ -1,0 +1,171 @@
+/* Fuente clásica de Windows XP */
+@import url('https://fonts.googleapis.com/css2?family=Tahoma:wght@400;700&display=swap');
+
+.music-player {
+  /* Fondo estilo ventana XP oscura */
+  background: linear-gradient(to bottom, #3a3a3a 0%, #1a1a1a 100%);
+  border: 2px solid #2d1b4e; /* Borde morado oscuro */
+  border-radius: 8px 8px 0 0; /* Bordes superiores redondeados clásicos de XP */
+  width: 100%;
+  max-width: 350px;
+  padding: 15px;
+  margin: 0 auto;
+  font-family: 'Tahoma', sans-serif;
+  color: white;
+  
+  /* Sombra de ventana */
+  box-shadow: 
+    inset 1px 1px 0px rgba(255, 255, 255, 0.2), /* Brillo interior */
+    4px 4px 10px rgba(0, 0, 0, 0.5); /* Sombra exterior */
+}
+
+/* Sección de información (Pantalla) */
+.track-info {
+  background: black;
+  border: 2px solid;
+  border-color: #555 #999 #999 #555; /* Borde "inset" (hundido) */
+  padding: 10px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-family: 'Courier New', monospace; /* Toque retro digital */
+  color: #d6b4ff; /* Texto lila claro */
+}
+
+.track-info h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+
+.track-info p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: #a370db;
+}
+
+/* Contenedor de progreso */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  margin-bottom: 15px;
+}
+
+.time {
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* --- ESTILO DE LOS SLIDERS TIPO WINDOWS XP --- */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+  margin: 5px 0;
+}
+
+/* El riel (track) hundido */
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  cursor: pointer;
+  /* El truco del degradado para el progreso (Morado Neón vs Gris oscuro) */
+  background: linear-gradient(
+    to right, 
+    #8a2be2 0%, 
+    #8a2be2 var(--progress), 
+    #2a2a2a var(--progress), 
+    #2a2a2a 100%
+  );
+  border: 1px solid #555;
+  border-bottom: 1px solid #777; /* Efecto hundido */
+  box-shadow: inset 1px 1px 2px black;
+  border-radius: 2px;
+}
+
+/* El botón (thumb) estilo XP (Pentágono o rectángulo biselado) */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 12px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, #d6b4ff 0%, #8a2be2 50%, #4b0082 100%);
+  cursor: pointer;
+  margin-top: -5px; /* Centrar respecto al track */
+  border: 1px solid #000;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Sombra 3D */
+}
+
+/* Hover en el slider */
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: linear-gradient(to bottom, #e0caff 0%, #9d46ff 50%, #5e00a3 100%);
+}
+
+/* --- CONTROLES (BOTONES 3D) --- */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  background: #252525;
+  padding: 10px;
+  border: 1px solid #000;
+  border-top: 1px solid #555;
+  box-shadow: inset 0 0 10px #000; /* Fondo hundido para los controles */
+  border-radius: 4px;
+}
+
+.control-btn {
+  /* Botón con volumen (gradiente) */
+  background: linear-gradient(to bottom, #6a3093 0%, #3e1b58 100%);
+  border: 1px solid #1a0b2e;
+  border-top: 1px solid #9c5bd6; /* Borde superior claro para efecto luz */
+  color: white;
+  border-radius: 5px;
+  padding: 5px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 #000;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.5);
+  transition: all 0.1s;
+}
+
+.control-btn:hover {
+  background: linear-gradient(to bottom, #8e44ad 0%, #5b2c82 100%);
+}
+
+.control-btn:active {
+  /* Efecto de presionar botón real */
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+  border-top: 1px solid #2d1542;
+}
+
+.play-btn {
+  font-size: 22px;
+  width: 50px;
+  height: 40px;
+  /* El botón de play suele destacar más */
+  background: linear-gradient(to bottom, #9b59b6 0%, #582875 100%);
+}
+
+/* --- VOLUMEN --- */
+.volume-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  background: #222;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid #444;
+  box-shadow: inset 0 1px 3px #000;
+}
+
+.volume-bar {
+  /* Override específico para la barra de volumen si quieres */
+  height: 6px;
+}
