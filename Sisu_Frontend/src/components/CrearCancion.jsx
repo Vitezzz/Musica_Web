@@ -1,38 +1,130 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useMusic } from '../contexts/MusicContext';
+import '../css/CrearCancion.css';
+
+
 export const CrearCancion = () => {
+
+  const { id } = useParams(); //Se lee el id de la url si existe
+  const { allSongs, setAllSongs } = useMusic(); //Se traen todas las canciones
+  const navigate = useNavigate(); //Redirige al terminar
+
+  //"Memoria del componente"
+  const [nombre, setNombre] = useState("");
+  const [artista, setArtista] = useState("");
+  const[cancionURL, setCancionURL] = useState("");
+  const[imagenURL, setImagenURL] = useState("");
+  const[duracion , setDuracion] = useState(0);
+
+  useEffect(() => {
+    if(id){
+      //Busca la cancion en la lista de AllSongs que tenga ese ID
+      const cancionEditar = allSongs.find(song => song._id === id);
+      
+      //Si se encuentra se actualizan los states
+      if (cancionEditar){
+        setNombre(cancionEditar.nombre);
+        setArtista(cancionEditar.artista);
+        setCancionURL(cancionEditar.cancionURL);
+        setImagenURL(cancionEditar.imagenURL);
+      }
+    }
+  }, [id, allSongs])
+
+  const handleSubmit = async (e) =>{
+    e.preventDefault(); // <== Evita que la pagina recargue
+
+    //Empaqueta los datos para enviarlos al back
+      const datosCancion = {
+        nombre,
+        artista,
+        cancionURL,
+        imagenURL,
+        duracion: 0
+      };
+
+    try{
+
+      if(id){
+        //Modo edicion
+        const respuesta = await axios.patch(`http://localhost:3000/api/v1/canciones/updateCancion/${id}`, datosCancion);
+
+        alert("Cancion actualizada de manera satisfactoria actualizada")
+
+        setAllSongs((prevSongs) => prevSongs.map(song => song._id === id ? { ...song, ...datosCancion} : song));
+
+        navigate("/");
+
+      }else{
+
+        //Se envia el paquete al back
+      const respuesta = await axios.post("http://localhost:3000/api/v1/canciones/crearCancion", datosCancion);
+
+      console.log("Song guardada con exito", respuesta.data);
+      alert("Cancion guardada exitosamente :)")
+
+      //Limpiar el formulario
+      setNombre("");
+      setArtista("");
+      setCancionURL("");
+      setImagenURL("");
+
+      }
+
+    }catch(error){
+      console.log("Error al guardar: ", error)
+      alert("Hubo error al guardar la song: (")
+    }
+
+  }
+
   return (
     <div className="canciones">
       <h2>Songs</h2>
-      <div className="crear-Cancion">
+      <form className="crear-Cancion" onSubmit={handleSubmit}>
         <h3>Crear new song</h3>
         <div className="song-create-form">
           <label>Nombre de la Song: </label>
-          <input type="text" placeholder="Song" required />
+          <input type="text" 
+          placeholder="Song"
+          value = {nombre} //El input muestra lo de la variable nombre
+          onChange={(e) => setNombre(e.target.value)} //Se actualiza el nombre al escribir 
+          required />
           <label>Nombre del artist: </label>
-          <input type="text" placeholder="artist" required />
-          <div class="input-group">
-            <label>Opción A: Sube tu archivo mp3/wav</label>
-            <input type="file" name="cancion_archivo" accept="audio/*" />
-          </div>
+          <input type="text"
+           placeholder="artist"
+           value= {artista}
+           onChange={(e) => setArtista(e.target.value)} 
+           required />
           <hr />{" "}
           <div class="input-group">
             <label>
-              Opción B: O pega un link (YouTube, SoundCloud, URL directa)
+             Subir cancion: Pega un link (YouTube, SoundCloud, URL directa)
             </label>
             <input
               type="url"
               name="cancion_url"
               placeholder="https://ejemplo.com/cancion.mp3"
+              value = {cancionURL}
+              onChange = {(e) => setCancionURL(e.target.value)}
+              required
             />
           </div>
           <div>
             <label>Subir Imagen: </label>
-            <input type = "file" name="imagen_song" accept="image/*" />
+            <input type = "url" 
+            name="imagen_song" 
+            accept="image/*"
+            value={imagenURL}
+            onChange={(e) => setImagenURL(e.target.value)} />
           </div>
           <div>
             <button type="submit">Guardar</button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

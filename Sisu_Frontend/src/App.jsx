@@ -22,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<AllSongs/>}/>
           <Route path="/CrearCancion" element={<CrearCancion />}/>
+          <Route path="/editarCancion/:id" element={<CrearCancion />}/>
         </Routes>
       </div>
     </main>

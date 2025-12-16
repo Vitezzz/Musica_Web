@@ -1,8 +1,28 @@
 import { useMusic } from '../contexts/MusicContext';
+import { Link } from 'react-router-dom'
 import '../css/AllSongs.css';
+import axios from 'axios'
 
 export const AllSongs = () =>{
-    const { allSongs, handlePlaySong, currentTrackIndex } = useMusic();
+    const { allSongs,setAllSongs, handlePlaySong, currentTrackIndex } = useMusic();
+
+    const handleDelete = async (e, songId) => {
+        e.stopPropagation();//Evita que la musica empiece a sonar al querer borrar la cancion
+
+        //Confirmacion para no borrar por error
+        if(!window.confirm("Seguro de borrar esta canción?")) return;
+
+        try{
+            console.log("Borrado song: ", songId)
+
+            const respuesta = await axios.delete(`http://localhost:3000/api/v1/canciones/deleteCancion/${songId}`)
+
+            setAllSongs((prevSongs) => prevSongs.filter(song => song._id !== songId)); //Actualiza la lista en react
+
+        }catch(error){
+            console.log("Error al borrar: " , songId)
+        }
+    }
 
     if (allSongs.length === 0) {
         return <h2>No hay canciones registradas aún T-T </h2>;
@@ -24,6 +44,10 @@ export const AllSongs = () =>{
                             </div>
                             <div>
                                 {currentTrackIndex === key ? "▶️" : "🎵"}
+                            </div>
+                            <button><Link to={`/editarCancion/${song._id}`}>✏️</Link></button>
+                            <div>
+                                <button onClick={(e) => handleDelete(e, song._id)}>🗑️</button>
                             </div>
                         </div>
                     ))}

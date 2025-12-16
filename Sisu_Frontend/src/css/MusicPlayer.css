@@ -60,7 +60,7 @@
 
 /* --- ESTILO DE LOS SLIDERS TIPO WINDOWS XP --- */
 input[type="range"] {
-  -webkit-appearance: none;
+  -moz-animation: none;
   width: 100%;
   background: transparent;
   margin: 5px 0;

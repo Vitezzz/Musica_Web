@@ -1,0 +1,161 @@
+/* src/css/CrearCancion.css */
+
+/* Fuente clásica de XP */
+@import url('https://fonts.googleapis.com/css2?family=Tahoma:wght@400;700&display=swap');
+
+/* Contenedor principal para centrar todo */
+.canciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh; /* Para que no se pegue arriba */
+  padding: 20px;
+  font-family: 'Tahoma', sans-serif;
+}
+
+/* El título de la sección (h2 externo) */
+.canciones h2 {
+  color: #d6b4ff; /* Lila claro */
+  text-shadow: 2px 2px 0px #000;
+  margin-bottom: 20px;
+}
+
+/* --- LA VENTANA ESTILO XP --- */
+.crear-Cancion {
+  background-color: #252525; /* Fondo gris oscuro cuerpo ventana */
+  width: 100%;
+  max-width: 450px;
+  
+  /* Borde morado oscuro estilo ventana */
+  border: 1px solid #5d4078; 
+  border-radius: 8px 8px 0 0; /* Curva solo arriba */
+  
+  /* Sombra 3D potente */
+  box-shadow: 
+    inset 1px 1px 0 rgba(255,255,255,0.1), /* Brillo interno */
+    5px 5px 15px rgba(0,0,0,0.6);         /* Sombra externa */
+  
+  overflow: hidden; /* Para que la barra de título no se salga */
+}
+
+/* --- BARRA DE TÍTULO (h3) --- */
+.crear-Cancion h3 {
+  /* Gradiente icónico de XP (Estilo Zune/Noir) */
+  background: linear-gradient(to bottom, #8956c9 0%, #4b2a75 100%);
+  margin: 0;
+  padding: 8px 15px;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 #000;
+  border-bottom: 1px solid #2d1b4e;
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Simulación de los botones de ventana (Minimizar, Cerrar) solo visual */
+.crear-Cancion h3::after {
+  content: "X";
+  font-size: 10px;
+  background: linear-gradient(to bottom, #d64a4a, #8b0000);
+  padding: 2px 6px;
+  border: 1px solid white;
+  border-radius: 3px;
+  box-shadow: 1px 1px 2px #000;
+  cursor: default;
+}
+
+/* --- EL FORMULARIO --- */
+.song-create-form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #e0e0e0;
+  font-size: 12px;
+}
+
+/* Etiquetas */
+.song-create-form label {
+  margin-bottom: 2px;
+  font-weight: bold;
+  color: #d6b4ff; /* Texto lila */
+}
+
+/* --- INPUTS ESTILO HUNDIDO --- */
+.song-create-form input[type="text"],
+.song-create-form input[type="url"],
+.song-create-form input[type="file"] {
+  padding: 6px;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Tahoma', sans-serif;
+  
+  /* Borde "Inset" (Hundido) clásico de Windows 98/XP */
+  border: 2px solid;
+  border-color: #555 #aaa #aaa #555; /* Oscuro arriba/izq, Claro abajo/der */
+  outline: none;
+}
+
+.song-create-form input:focus {
+  background-color: #1a1a1a;
+  border-color: #a370db #555 #555 #a370db; /* Resplandor morado al escribir */
+}
+
+/* Input File (truco para que se vea decente) */
+.song-create-form input[type="file"] {
+  border: none;
+  background: transparent;
+  color: #aaa;
+}
+
+/* --- GRUPOS DE INPUTS --- */
+.input-group {
+  border: 1px solid #444;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #1e1e1e;
+  margin-bottom: 5px;
+}
+
+/* Separador */
+hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(163, 112, 219, 0.75), rgba(0, 0, 0, 0));
+  margin: 10px 0;
+}
+
+/* --- BOTÓN ESTILO XP --- */
+.song-create-form button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 6px 0;
+  font-family: 'Tahoma', sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  color: white;
+  cursor: pointer;
+  
+  /* Gradiente botón morado */
+  background: linear-gradient(to bottom, #a370db 0%, #6a3093 50%, #4b1a70 100%);
+  
+  border: 1px solid #222;
+  border-radius: 3px;
+  box-shadow: inset 1px 1px 0 rgba(255,255,255,0.3), 2px 2px 3px rgba(0,0,0,0.5);
+  transition: all 0.1s;
+}
+
+.song-create-form button:hover {
+  background: linear-gradient(to bottom, #b485e6 0%, #7e3eb0 50%, #5e2385 100%);
+}
+
+.song-create-form button:active {
+  /* Efecto de botón presionado */
+  border: 1px solid #000;
+  box-shadow: inset 2px 2px 3px rgba(0,0,0,0.6);
+  transform: translateY(1px);
+}

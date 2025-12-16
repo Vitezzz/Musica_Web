@@ -81,6 +81,7 @@ export const MusicProvider = ({children}) =>{
         const pause = () => setIsPlaying(false);
     
     return <MusicContext.Provider value={{allSongs, 
+        setAllSongs,
         handlePlaySong, 
         currentTrackIndex,
         currentTrack,
