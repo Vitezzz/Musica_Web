@@ -14,7 +14,7 @@ export const CrearCancion = () => {
   //"Memoria del componente"
   const [nombre, setNombre] = useState("");
   const [artista, setArtista] = useState("");
-  const[cancionURL, setCancionURL] = useState("");
+  const[cancionFile, setCancionFile] = useState("");
   const[imagenURL, setImagenURL] = useState("");
   const[duracion , setDuracion] = useState(0);
 
@@ -36,31 +36,28 @@ export const CrearCancion = () => {
   const handleSubmit = async (e) =>{
     e.preventDefault(); // <== Evita que la pagina recargue
 
-    //Empaqueta los datos para enviarlos al back
-      const datosCancion = {
-        nombre,
-        artista,
-        cancionURL,
-        imagenURL,
-        duracion: 0
-      };
+    //Creamos un formdata 
+    const formData = new FormData();
+    formData.append("nombre", nombre);
+    formData.append("artista", artista);
+    formData.append("imagenURL", imagenURL);
+    formData.append("duracion", 0);
+    formData.append("cancion_file", cancionFile)
 
     try{
 
       if(id){
         //Modo edicion
-        const respuesta = await axios.patch(`http://localhost:3000/api/v1/canciones/updateCancion/${id}`, datosCancion);
+        // --- MODO EDICIÓN (Pendiente) ---
+        // Por ahora solo avisamos, porque editar archivos requiere otra lógica
+        alert("La edición de archivos la veremos más adelante. Intenta crear una canción nueva.");
 
-        alert("Cancion actualizada de manera satisfactoria actualizada")
-
-        setAllSongs((prevSongs) => prevSongs.map(song => song._id === id ? { ...song, ...datosCancion} : song));
-
-        navigate("/");
+        //navigate("/");
 
       }else{
 
         //Se envia el paquete al back
-      const respuesta = await axios.post("http://localhost:3000/api/v1/canciones/crearCancion", datosCancion);
+      const respuesta = await axios.post("http://localhost:3000/api/v1/canciones/crearCancion", formData);
 
       console.log("Song guardada con exito", respuesta.data);
       alert("Cancion guardada exitosamente :)")
@@ -68,7 +65,7 @@ export const CrearCancion = () => {
       //Limpiar el formulario
       setNombre("");
       setArtista("");
-      setCancionURL("");
+      setCancionFile(null);
       setImagenURL("");
 
       }
@@ -79,6 +76,7 @@ export const CrearCancion = () => {
     }
 
   }
+
 
   return (
     <div className="canciones">
@@ -101,14 +99,13 @@ export const CrearCancion = () => {
           <hr />{" "}
           <div class="input-group">
             <label>
-             Subir cancion: Pega un link (YouTube, SoundCloud, URL directa)
+             Subir cancion archivo .mp3:
             </label>
             <input
-              type="url"
-              name="cancion_url"
-              placeholder="https://ejemplo.com/cancion.mp3"
-              value = {cancionURL}
-              onChange = {(e) => setCancionURL(e.target.value)}
+              type="file"
+              name="cancion_file"
+              accept='.mp3, audio/*'
+              onChange = {(e) => setCancionFile(e.target.files[0])}
               required
             />
           </div>

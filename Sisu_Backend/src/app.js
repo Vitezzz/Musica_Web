@@ -1,12 +1,21 @@
 import express from 'express'
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();//creacion de una app de express
+
+//Configuracion para rutaas de archivos en modulos
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors());
 
 //traduce los archivos 
 app.use(express.json());
+
+//Hacemos publica la carpeta uploads
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 //Importamos las rutas
 import userRouter from './routes/user.route.js';

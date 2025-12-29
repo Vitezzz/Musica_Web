@@ -3,15 +3,27 @@ import { Cancion } from "../models/cancion.model.js"
 //Crear una cancion
 const crearCancion = async (req,res) => {
     try{
-        const {nombre, artista, cancionURL,
+        const {nombre, artista,
             duracion, imagenURL
         } = req.body
 
-        if(!nombre || !cancionURL){
+        if(!nombre){
             return res.status(400).json({
                 message:"Este campo es necesario"
             });
         }
+
+        //Validamos si llego el archivo de musica
+        if(!req.file){
+            return res.status(400).json({
+                message: "Debes subir una song de file"
+            });
+        }
+
+        //Construccion de la URL para el archivo de musica
+        const serverUrl = `${req.protocol}://${req.get('host')}`;
+        const cancionName = req.file.filename;
+        const cancionURL = `${serverUrl}/uploads/${cancionName}`;
 
 
         const cancion = await Cancion.create({nombre, artista,
