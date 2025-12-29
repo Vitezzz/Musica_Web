@@ -55,14 +55,17 @@ const getCanciones = async (req,res) => {
 //actualiza la cancion
 const updateCancion = async (req,res) => {
     try{
-        //Validacion basica si el body esta empty
-        if(Object.keys(req.body).length === 0){
-            return res.status(400).json({
-                message:"No data provided"
-            })
+
+        //copiamos los datos de texto
+        let datosParaActualizar = { ...req.body };
+        //Si llego un archivo nuevo (audio), generamos su URL y la agregamos
+        if(req.file){
+            const serverURL = `${req.protocol}://${req.get('host')}`;
+            const cancionName = req.file.filename;
+            datosParaActualizar.cancionURL = `${serverURL}/uploads/${cancionName}`;
         }
 
-        const cancion = await Cancion.findByIdAndUpdate(req.params.id, req.body,
+        const cancion = await Cancion.findByIdAndUpdate(req.params.id, datosParaActualizar,
             {new: true}
         )
 

@@ -8,7 +8,7 @@ import '../css/CrearCancion.css';
 export const CrearCancion = () => {
 
   const { id } = useParams(); //Se lee el id de la url si existe
-  const { allSongs, setAllSongs } = useMusic(); //Se traen todas las canciones
+  const { allSongs, setAllSongs, getSongs } = useMusic(); //Se traen todas las canciones
   const navigate = useNavigate(); //Redirige al terminar
 
   //"Memoria del componente"
@@ -27,8 +27,8 @@ export const CrearCancion = () => {
       if (cancionEditar){
         setNombre(cancionEditar.nombre);
         setArtista(cancionEditar.artista);
-        setCancionURL(cancionEditar.cancionURL);
         setImagenURL(cancionEditar.imagenURL);
+        setDuracion(cancionEditar.duracion);
       }
     }
   }, [id, allSongs])
@@ -36,47 +36,72 @@ export const CrearCancion = () => {
   const handleSubmit = async (e) =>{
     e.preventDefault(); // <== Evita que la pagina recargue
 
-    //Creamos un formdata 
-    const formData = new FormData();
-    formData.append("nombre", nombre);
-    formData.append("artista", artista);
-    formData.append("imagenURL", imagenURL);
-    formData.append("duracion", 0);
-    formData.append("cancion_file", cancionFile)
+    try {
+      const formData = new FormData();
+      formData.append("nombre", nombre);
+      formData.append("artista", artista);
+      formData.append("imagenURL", imagenURL);
+      // Usamos la duración calculada (state)
+      formData.append("duracion", duracion); 
 
-    try{
-
-      if(id){
-        //Modo edicion
-        // --- MODO EDICIÓN (Pendiente) ---
-        // Por ahora solo avisamos, porque editar archivos requiere otra lógica
-        alert("La edición de archivos la veremos más adelante. Intenta crear una canción nueva.");
-
-        //navigate("/");
-
-      }else{
-
-        //Se envia el paquete al back
-      const respuesta = await axios.post("http://localhost:3000/api/v1/canciones/crearCancion", formData);
-
-      console.log("Song guardada con exito", respuesta.data);
-      alert("Cancion guardada exitosamente :)")
-
-      //Limpiar el formulario
-      setNombre("");
-      setArtista("");
-      setCancionFile(null);
-      setImagenURL("");
-
+      if (cancionFile) {
+        formData.append("cancion_file", cancionFile);
       }
 
-    }catch(error){
-      console.log("Error al guardar: ", error)
-      alert("Hubo error al guardar la song: (")
+      // --- AQUÍ EMPIEZA LA DECISIÓN ---
+      if (id) {
+        // ==============================
+        // MODO EDICIÓN (Tiene ID)
+        // ==============================
+        await axios.patch(`http://localhost:3000/api/v1/canciones/updateCancion/${id}`, formData);
+        
+        alert("Canción actualizada correctamente :D");
+        
+        await getSongs(); // Actualizamos la lista
+        navigate("/");    // Nos vamos al inicio
+
+      } else {
+        // ==============================
+        // MODO CREACIÓN (No tiene ID)
+        // ==============================
+        // IMPORTANTE: Este bloque está dentro del ELSE, por eso no se mezcla
+        const respuesta = await axios.post("http://localhost:3000/api/v1/canciones/crearCancion", formData);
+        
+        console.log("Song guardada con éxito", respuesta.data);
+        alert("Canción guardada exitosamente :)");
+
+        await getSongs(); // Actualizamos la lista
+
+        // Limpiar el formulario
+        setNombre("");
+        setArtista("");
+        setCancionFile(null);
+        setImagenURL("");
+        setDuracion(0);
+      }
+
+    } catch (error) {
+      console.log("Error:", error);
+      alert("Hubo un error al procesar la solicitud :(");
     }
 
   }
 
+  const handleFileChange = (e) => {
+
+    const file = e.target.files[0];
+
+    if(file){
+      setCancionFile(file);
+
+      //Obtener la duración del audio
+      const audio = new Audio(URL.createObjectURL(file));
+      audio.onloadedmetadata = () => {
+        //Se guarda la duración en segundos (redondeado)
+        setDuracion(Math.round(audio.duration));
+      }
+    }
+  }
 
   return (
     <div className="canciones">
@@ -105,8 +130,8 @@ export const CrearCancion = () => {
               type="file"
               name="cancion_file"
               accept='.mp3, audio/*'
-              onChange = {(e) => setCancionFile(e.target.files[0])}
-              required
+              onChange = {handleFileChange}
+              required = {!id} //Solo es obligatorio si NO hay id
             />
           </div>
           <div>

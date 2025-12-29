@@ -4,7 +4,7 @@ import '../css/AllSongs.css';
 import axios from 'axios'
 
 export const AllSongs = () =>{
-    const { allSongs,setAllSongs, handlePlaySong, currentTrackIndex } = useMusic();
+    const { allSongs,getSongs,setAllSongs, handlePlaySong, currentTrackIndex, formatTime } = useMusic();
 
     const handleDelete = async (e, songId) => {
         e.stopPropagation();//Evita que la musica empiece a sonar al querer borrar la cancion
@@ -13,11 +13,14 @@ export const AllSongs = () =>{
         if(!window.confirm("Seguro de borrar esta canción?")) return;
 
         try{
-            console.log("Borrado song: ", songId)
 
             const respuesta = await axios.delete(`http://localhost:3000/api/v1/canciones/deleteCancion/${songId}`)
 
-            setAllSongs((prevSongs) => prevSongs.filter(song => song._id !== songId)); //Actualiza la lista en react
+            await getSongs();
+
+            console.log("Borrado song: ", songId)
+
+            //setAllSongs((prevSongs) => prevSongs.filter(song => song._id !== songId)); //Actualiza la lista en react
 
         }catch(error){
             console.log("Error al borrar: " , songId)
@@ -39,7 +42,7 @@ export const AllSongs = () =>{
                                 <h3>{song.nombre}</h3>
                                 <img src={song.imagenURL} alt={song.nombre}/>
                                 <p>{song.artista}</p>
-                                <span>{Math.trunc(song.duracion / 60)}</span>
+                                <span>{formatTime(song.duracion)}</span>
                                 <span>{song.createdAt}</span>
                             </div>
                             <div>

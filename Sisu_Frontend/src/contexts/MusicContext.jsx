@@ -5,8 +5,15 @@ const MusicContext = createContext();
 
 export const MusicProvider = ({children}) =>{
 
-    useEffect(() => {
-        const getSongs = async () =>{
+    const [allSongs, setAllSongs] = useState([]);
+    const [currentTrack, setCurrentTrack] = useState(null);
+    const [currentTrackIndex, setCurrentTrackIndex]= useState(0);
+    const [currentTime, setCurrentTime]= useState(0);
+    const [duration, setDuration]= useState(0);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [volume, setVolume ]= useState(1);
+
+    const getSongs = async () =>{
             try{
                 //Peticion al backend puente con el bakc
                 const response = await axios.get("http://localhost:3000/api/v1/canciones/getCancion");
@@ -24,17 +31,10 @@ export const MusicProvider = ({children}) =>{
                 console.error("Error cargando canciones: ", error)
             }
         };
-        getSongs();
-    }, [])
 
-        const [allSongs, setAllSongs] = useState([]);
-        const [currentTrack, setCurrentTrack] = useState(null);
-        const [currentTrackIndex, setCurrentTrackIndex]= useState(0);
-        const [currentTime, setCurrentTime]= useState(0);
-        const [duration, setDuration]= useState(0);
-        const [isPlaying, setIsPlaying] = useState(false);
-        const [volume, setVolume ]= useState(1);
-    
+    useEffect(() => {
+        getSongs();
+    }, [])    
     
         //Controla la reproduccion de la cancion
         const handlePlaySong = (song, index) =>{
@@ -80,7 +80,7 @@ export const MusicProvider = ({children}) =>{
         const play = () => setIsPlaying(true);
         const pause = () => setIsPlaying(false);
     
-    return <MusicContext.Provider value={{allSongs, 
+    return <MusicContext.Provider value={{allSongs,getSongs,
         setAllSongs,
         handlePlaySong, 
         currentTrackIndex,
