@@ -1,4 +1,4 @@
-import { useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import '../css/MusicPlayer.css';
 import { useMusic } from "../contexts/MusicContext";
 
@@ -16,115 +16,105 @@ export const MusicPlayer = () => {
     volume,
     setVolume,
     play } = useMusic();
+    
   const audioRef = useRef(null);
 
-  const handleTimeChange = (e) =>{
-    const audio = audioRef.current;
-    if(!audio) return;
-    const newTime = parseFloat(e.target.value);
-    audio.currentTime = newTime;
-    setCurrentTime(newTime);
-
-  }
-
-  const handleVolumeChange = (e) =>{
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-
-  }
-
-  useEffect(() => {
-
-    const audio = audioRef.current;
-    if(!audio) return;
-
-    audio.volume = volume;
-
-  }, [volume])
-
-  useEffect(() => {
-
-    const audio = audioRef.current;
-    if(!audio) return;
-
-    if(isPlaying){
-      audio.play().catch((err) => console.log(err))
-    }else{
-      audio.pause();
-    }
-
-  }, [isPlaying])
-
-  //Va a correr cada que se cambie una cancion
+  // 1. Efecto para manejar Play/Pause y Volumen
   useEffect(() => {
     const audio = audioRef.current;
-
     if(!audio) return;
-
     
-    const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
-    };
-
-    const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
+    audio.volume = volume;
+    
+    if(isPlaying){
+        // Usamos una promesa para evitar errores si el play es muy rápido
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Esperando carga para reproducir...", error);
+            });
+        }
+    }else{
+        audio.pause();
     }
+  }, [isPlaying, volume, currentTrack]); 
 
-    const handleEnded = () => {
-      nextTrack();
-    }
-
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);//loadedmetadata es de JS
-    audio.addEventListener("canplay", handleLoadedMetadata);//loadedmetadata es de JS
-    audio.addEventListener("timeupdate", handleTimeUpdate);//loadedmetadata es de JS
-    audio.addEventListener("ended", handleEnded);//loadedmetadata es de JS
-
-
-    return () => {
-          audio.removeEventListener("loadedmetadata", handleLoadedMetadata);//loadedmetadata es de JS
-          audio.removeEventListener("canplay", handleLoadedMetadata);//loadedmetadata es de JS
-          audio.removeEventListener("timeupdate", handleTimeUpdate);
-          audio.removeEventListener("ended", handleEnded);
-    }
-  }, [setDuration, setCurrentTime  ,currentTrack , nextTrack]);
-
+  // 2. Efecto simple para resetear visualmente al cambiar canción
   useEffect(() =>{
     const audio = audioRef.current;
     if(!audio) return;
 
-    audio.load();
+    setDuration(0); 
     setCurrentTime(0);
-    setDuration(0);
+    audio.load(); // Forzamos la carga del nuevo archivo
 
-  }, [currentTrack, setCurrentTime, setDuration]);
+  }, [currentTrack, setDuration, setCurrentTime]);
 
+  // 3. HANDLERS MÁS SEGUROS (Directos en la etiqueta audio)
+  const onLoadedMetadata = (e) => {
+      const seconds = e.currentTarget.duration;
+      setDuration(seconds);
+      // Si debería estar sonando, intentamos play de nuevo por seguridad
+      if(isPlaying) e.currentTarget.play().catch(e => console.error(e));
+  };
+
+  const onTimeUpdate = (e) => {
+      setCurrentTime(e.currentTarget.currentTime);
+  };
+
+  const handleSeek = (e) =>{
+    const newTime = parseFloat(e.target.value);
+    if(audioRef.current) audioRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+  }
+
+  const handleVolume = (e) =>{
+    setVolume(parseFloat(e.target.value));
+  }
+
+  if (!currentTrack) return null;
+
+  // Cálculo para la barra de progreso visual (CSS variable)
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
 
-    if (!currentTrack) return null;
   return (
     <div className="music-player">
-      <audio ref={audioRef} src={currentTrack.cancionURL} preload="metadata" /*crossOrigin="anonymous"*//>
-       <div className="track-info">
-        <h3>
-          {currentTrack.nombre}
-        </h3>
-        <p>
-          {currentTrack.artista}
-        </p>
+      {/* ✅ SOLUCIÓN AL ERROR DE 0:00 
+         Usamos los eventos onLoadedMetadata, onTimeUpdate, etc. 
+         directamente aquí en lugar de addEventListener.
+      */}
+      <audio 
+        ref={audioRef} 
+        src={currentTrack.cancionURL} 
+        preload="metadata"
+        onLoadedMetadata={onLoadedMetadata}
+        onTimeUpdate={onTimeUpdate}
+        onEnded={nextTrack}
+      />
+      
+       {/* Estructura actualizada para el CSS Retro */}
+       <div className="song-info">
+        <img src={currentTrack.imagenURL} alt="Cover" />
+        <div className="song-details">
+            <h4>{currentTrack.nombre}</h4>
+            <p>{currentTrack.artista}</p>
+        </div>
        </div>
+
        <div className="progress-container">
         <span className="time">{formatTime(currentTime)}</span>
         <input type ="range"
          min="0" 
          max={duration || 0} 
          step="0.1" 
-        value={currentTime || 0}
-        className="progress-bar"
-        onChange={handleTimeChange}
-        style={{"--progress" : `${progressPercentage}%`}}
+         value={currentTime || 0}
+         className="progress-bar"
+         onChange={handleSeek}
+         style={{"--progress" : `${progressPercentage}%`}}
         />
         <span className="time">{formatTime(duration)}</span>
        </div>
+
        <div className="controls">
         <button className="control-btn" onClick={previousTrack}>⏪</button>
         <button className="control-btn play-btn" 
@@ -133,13 +123,15 @@ export const MusicPlayer = () => {
         </button>
         <button className="control-btn" onClick={nextTrack}>⏭️</button>
        </div>
-       <div className="volume-container">
+
+       <div className="volume-control"> 
         <span>🔊</span>
-        <input type="range" min="0" max="1" step="0.1" className="volume-bar"
-        onChange={handleVolumeChange}
-        value={volume} />
+        <input type="range" 
+         min="0" max="1" step="0.05" 
+         className="volume-slider"
+         onChange={handleVolume}
+         value={volume} />
        </div>
     </div>
   )
 }
-

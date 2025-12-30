@@ -43,7 +43,7 @@ export const MusicProvider = ({children}) =>{
             //Se refiere al indice de la lista en que se encuentra
             setCurrentTrackIndex(index);
     
-            setIsPlaying(false);
+            setIsPlaying(true);
         }
     
         //Reproducir siguiente cancion
@@ -53,7 +53,7 @@ export const MusicProvider = ({children}) =>{
                 setCurrentTrack(allSongs[nextIndex]);
                 return nextIndex;
             });
-            setIsPlaying(false);
+            setIsPlaying(true);
         }
     
          //Reproducir cancion anterior
@@ -63,7 +63,7 @@ export const MusicProvider = ({children}) =>{
                 setCurrentTrack(allSongs[nextIndex]);
                 return nextIndex;
             })
-            setIsPlaying(false);
+            setIsPlaying(true);
         }
     
         const formatTime = (time) => {
