@@ -61,6 +61,7 @@ export const MusicPlayer = () => {
 
     if(!audio) return;
 
+    
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
     };

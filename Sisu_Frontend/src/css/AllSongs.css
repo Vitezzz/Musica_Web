@@ -1,111 +1,147 @@
 /* src/css/AllSongs.css */
 
-/* --- Fondo General (Negro Profundo) --- */
 .all-songs {
-  background-color: #0b0b0b; /* Casi negro absoluto */
+  padding: 80px 2rem 140px;
+  background-color: #000;
   min-height: 100vh;
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: white;
+  font-family: 'Tahoma', sans-serif;
 }
 
 .all-songs h2 {
-  color: #d8b4fe; /* Un lila muy claro para el título */
-  margin-bottom: 30px;
-  font-weight: 700;
-  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5); /* Resplandor morado */
+  color: #d6b4ff;
+  border-bottom: 1px solid #5d4078;
+  margin-bottom: 20px;
 }
 
-/* --- La Rejilla (Grid Responsivo) --- */
 .songs-grid {
   display: grid;
-  /* Las tarjetas tendrán un ancho mínimo de 220px y se ajustan solas */
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 25px;
+  /* Hacemos las tarjetas un poco más anchas */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
 }
 
-/* --- La Tarjeta (Card) --- */
+/* --- TARJETA PRINCIPAL (SIN PADDING) --- */
 .song-card {
-  background-color: #1a1a1a; /* Gris muy oscuro para contrastar con el fondo */
-  border-radius: 15px;
-  padding: 15px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  border: 2px solid transparent; /* Borde invisible para evitar saltos */
-  position: relative;
-  overflow: hidden;
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  overflow: hidden; /* Esto recorta la imagen en las esquinas */
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  /* ¡IMPORTANTE! Sin padding aquí para que la imagen toque los bordes */
+  padding: 0; 
 }
 
-/* Efecto al pasar el mouse (Hover) */
 .song-card:hover {
-  background-color: #252525;
-  transform: translateY(-8px); /* Flota hacia arriba */
-  box-shadow: 0 10px 20px rgba(139, 92, 246, 0.2); /* Sombra morada suave */
+  transform: translateY(-5px);
+  border-color: #a855f7;
+  box-shadow: 0 5px 15px rgba(168, 85, 247, 0.4);
 }
 
-/* --- Estado ACTIVO (Cuando suena la canción) --- */
 .song-card.active {
-  background-color: #1e1024; /* Fondo morado muy oscuro */
-  border-color: #a855f7;      /* Borde Morado Neón */
-  box-shadow: 0 0 15px rgba(168, 85, 247, 0.6); /* Resplandor fuerte */
+  border: 2px solid #a855f7;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
 }
 
-/* --- Información de la Canción --- */
-.song-info {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-/* Imagen de portada */
-.song-info img {
+/* --- 1. IMAGEN DE PORTADA --- */
+.card-image {
+  position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; /* Mantiene la imagen cuadrada siempre */
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+  aspect-ratio: 1 / 1; /* Cuadrado perfecto */
+  background-color: #000;
 }
 
-/* Título */
-.song-info h3 {
-  margin: 0;
-  font-size: 1.1rem;
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Llena todo el espacio sin deformarse */
+  display: block;
+}
+
+/* Efecto visual del botón play sobre la imagen */
+.play-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  opacity: 0;
+  transition: opacity 0.2s;
   color: #fff;
+}
+
+.song-card:hover .play-overlay {
+  opacity: 1;
+}
+
+/* --- 2. CONTENIDO DE TEXTO --- */
+.card-content {
+  padding: 15px; /* Aquí sí ponemos espacio para que el texto no pegue al borde */
+  flex-grow: 1;
+}
+
+.card-content h3 {
+  margin: 0 0 5px 0;
+  color: #fff;
+  font-size: 1.1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Artista */
-.song-info p {
+.card-content p {
   margin: 0;
+  color: #a855f7; /* Artista en morado */
+  font-weight: bold;
   font-size: 0.9rem;
-  color: #a78bfa; /* Morado lavanda */
-  font-weight: 500;
 }
 
-/* Duración y fecha (Spans) */
-.song-info span {
-  font-size: 0.75rem;
-  color: #6b7280; /* Gris para info secundaria */
-  display: inline-block;
-  margin-right: 10px;
-  margin-top: 5px;
+.meta-info {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #777;
 }
 
-/* --- Icono de Play/Pausa --- */
-.song-card > div:last-child {
-  margin-top: 15px;
-  text-align: right;
-  font-size: 1.8rem;
-  /* Animación suave para el icono */
-  transition: transform 0.2s;
+/* --- 3. BOTONES DE ACCIÓN (FOOTER) --- */
+.card-actions {
+  background-color: #111;
+  border-top: 1px solid #333;
+  padding: 10px 15px;
+  display: flex;
+  gap: 10px;
 }
 
-.song-card:hover > div:last-child {
-  transform: scale(1.1);
+.action-btn {
+  flex: 1; /* Los botones se reparten el espacio 50/50 */
+  padding: 8px 0;
+  text-align: center;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: transparent;
+  color: #ccc;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none; /* Para el Link */
+  display: flex;       /* Para centrar texto e icono */
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.action-btn:hover {
+  background-color: #222;
+  color: #fff;
+  border-color: #a855f7;
+}
+
+.action-btn.delete:hover {
+  border-color: #ff4444;
+  color: #ff4444;
 }

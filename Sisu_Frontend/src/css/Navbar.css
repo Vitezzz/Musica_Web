@@ -1,35 +1,54 @@
-/* --- Contenedor Principal (.navbar) --- */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 42px; /* Altura clásica XP */
-    font-family: Tahoma, "Trebuchet MS", sans-serif;
+    height: 40px; /* Altura de barra de tareas */
     
-    /* Gradiente XP: Morado grisáceo a Negro */
+    /* Efecto "Glossy" o plástico de XP */
     background: linear-gradient(to bottom, 
-        #4a3b52 0%,   
-        #2e2135 12%,  
-        #080808 100% 
+        #5e4075 0%, 
+        #3a234f 50%, 
+        #241236 50%, 
+        #150821 100%
     );
     
-    border-top: 1px solid #655370; /* Luz borde superior */
-    border-bottom: 2px solid #000000; /* Sombra dura abajo */
+    border-bottom: 2px solid #000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.8);
     
     display: flex;
     align-items: center;
-    padding: 0 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    padding: 0 10px;
     z-index: 1000;
+    font-family: 'Tahoma', sans-serif;
 }
 
-/* --- Contenedor de la marca (.navbar-brand) --- */
 .navbar-brand {
-    display: flex;
-    align-items: center;
-    height: 100%;
+    font-weight: bold;
+    font-style: italic;
+    color: #fff;
+    text-shadow: 2px 2px 4px #000;
+    font-size: 18px;
     
-    /* Separadores verticales estilo XP para darle relieve */
-    border-right: 2px solid
+    /* El botón de inicio simulado */
+    padding: 5px 15px;
+    background: radial-gradient(circle at center, #4aa658 0%, #1e5c26 100%); /* Verde Start clásico o morado si prefieres */
+    border-radius: 0 10px 10px 0; /* Curva estilo XP */
+    box-shadow: inset 1px 1px 2px rgba(255,255,255,0.5), 2px 2px 5px #000;
+    border: 1px solid #143d1a;
+    margin-right: 20px;
+}
+
+/* Enlaces del nav */
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 12px;
+    margin: 0 5px;
+}
+
+.navbar a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
 }
