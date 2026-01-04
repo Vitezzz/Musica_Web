@@ -26,8 +26,13 @@ const crearCancion = async (req,res) => {
         const cancionURL = `${serverUrl}/uploads/${cancionName}`;
 
 
-        const cancion = await Cancion.create({nombre, artista,
-            cancionURL, duracion, imagenURL
+        const cancion = await Cancion.create({
+            nombre, 
+            artista,
+            cancionURL, 
+            duracion, 
+            imagenURL, 
+            user_id: req.user.id
         })
 
         res.status(201).json({
