@@ -1,5 +1,6 @@
 //son los paths - caminos --deciden el tipo de respuesta que tendra
 import { User } from "../models/user.model.js"
+import jwt from 'jsonwebtoken';
 
 const registerUser = async (req, res) => {
     try {
@@ -25,6 +26,20 @@ const registerUser = async (req, res) => {
             password,
             loggedIn: false,
         })
+
+        const token = await jwt.sign(
+            { id: user._id }, //(Datos guardados)
+            "secret123", //Debe coincidir con la del middleware
+            { expiresIn: "1d" } //Tiempo de vida 
+        );
+
+        //Enviamos la cookie
+        res.cookie("token", token ,{
+            httpOnly: true, //Por seguridad el navegador no deja que JS(front) toque esta cookie
+            secure: true, //Solo enviar por http
+            sameSite: 'none' //Ayuda con problemas de cookies entre diferentes dominios
+        })
+
         res.status(201).json({
             message: "Papu registrado",
             user: {
@@ -33,6 +48,7 @@ const registerUser = async (req, res) => {
                 username: user.username
             }
         })
+
 
         //en caso de que algo falle en el server
     } catch (error) {
@@ -58,15 +74,15 @@ const loginUser = async (req, res) => {
         //Comparacion de contraseñas
         const isMatch = await user.comparePassword(password);
 
-        const token = await jwt.sign(
-            { id: userFound._id }, //(Datos guardados)
-            "secret123", //Debe coincidir con la del middleware
-            { expiresIn: "1d" } //Tiempo de vida 
-        );
-
         if (!isMatch) return res.status(400).json({
             message: "Credenciales invalidas"
         })
+
+        const token = await jwt.sign(
+            { id: user._id }, //(Datos guardados)
+            "secret123", //Debe coincidir con la del middleware
+            { expiresIn: "1d" } //Tiempo de vida 
+        );
 
         //Enviamos la cookie
         res.cookie("token", token ,{
@@ -83,6 +99,8 @@ const loginUser = async (req, res) => {
                 username: user.username
             }
         })
+
+        
     } catch (error) {
         res.status(500).json({
             message: "Internal server error"
@@ -93,29 +111,61 @@ const loginUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
     try {
-        const { email } = req.body;
+        /* const { email } = req.body;
 
-        const user = await User.findOne({
+       const user = await User.findOne({
             email
         })
 
         if (!user) return res.status(404).json({
             message: "Usuario con carpeta de investigacion"
-        })
+        }) */
+
+        res.clearCookie("token");
 
         res.status(200).json({
             message: "Logout exitoso"
         })
     } catch (error) {
         res.status(500).json({
-            message: "Error INterno del Servidor", error
+            message: "Error Interno del Servidor", error
         })
     }
 }
 
+const verifyToken = async (req, res) => {
+
+    try{
+
+        const { token } = req.cookies;
+        
+        if (!token) return res.sendStatus(401);
+
+
+        const decoded = jwt.verify(token, "secret123")
+
+        const userFound = await User.findById(decoded.id);
+
+        if(!userFound) return res.sendStatus(401);
+
+        return res.json({
+            id: userFound._id, 
+            username: userFound.username,
+            email: userFound.email,
+        });
+
+    }catch(error){
+
+        return res.sendStatus(401);
+
+    }
+}
+
+
 export {
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    verifyToken
 };
 
