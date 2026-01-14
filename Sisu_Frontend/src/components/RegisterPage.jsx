@@ -19,7 +19,7 @@ export const RegisterPage = () => {
 
         await signUp(values);
 
-        navigate("/")
+        navigate("/AllSongs")
 
         console.log("Datos a enviar: " , values)
       }catch(error){

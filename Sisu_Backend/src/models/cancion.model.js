@@ -1,4 +1,5 @@
 import mongoose, {Schema} from "mongoose";
+import { User } from "./user.model";
 
 const songSchema = new Schema(
     {
@@ -24,6 +25,11 @@ const songSchema = new Schema(
         imagenURL:{
             type:String,
             default: "https://i.pinimg.com/736x/f7/af/e3/f7afe365756d91e223e74bf48e85de41.jpg"
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required : true
         }
 
     },

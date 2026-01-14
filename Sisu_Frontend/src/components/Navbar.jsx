@@ -17,7 +17,7 @@ export const Navbar = () => {
         {isAuthenticated ? (
           <>
             <Link
-              to="/"
+              to="/AllSongs"
               className={`nav-link ${
                 location.pathname === "/" ? "active" : ""
               }`}
@@ -36,7 +36,7 @@ export const Navbar = () => {
           </>
         ) : (
           <>
-            <Link to="/LoginPage" className={`nav-link ${location.pathname === "/login" ? "active" : ""}`}>Login</Link>
+            <Link to="/" className={`nav-link ${location.pathname === "/login" ? "active" : ""}`}>Login</Link>
             <Link to="/RegisterPage" className={`nav-link ${location.pathname === "/addSongs" ? "active" : ""}`}>Register</Link>
           </>
         )}

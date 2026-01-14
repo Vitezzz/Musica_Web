@@ -8,6 +8,7 @@ import { MusicProvider } from "./contexts/MusicContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Navbar } from "./components/Navbar";
 import { LoginPage } from "./pages/LoginPage";
+import { ProtectedRoute } from "./ProtectedRoute";
 
 function App() {
   return (
@@ -23,14 +24,16 @@ function App() {
                 </div>
                 <div>
                   <Routes>
-                    <Route path="/" element={<AllSongs />} />
-                    <Route path="/CrearCancion" element={<CrearCancion />} />
-                    <Route
-                      path="/editarCancion/:id"
-                      element={<CrearCancion />}
-                    />
+                    <Route element={<ProtectedRoute />}>
+                      <Route path="/Allsongs" element={<AllSongs />} />
+                      <Route path="/CrearCancion" element={<CrearCancion />} />
+                      <Route
+                        path="/editarCancion/:id"
+                        element={<CrearCancion />}
+                      />
+                    </Route>
                     <Route path="/RegisterPage" element={<RegisterPage />} />
-                    <Route path="/LoginPage" element={<LoginPage />} />
+                    <Route path="/" element={<LoginPage />} />
                   </Routes>
                 </div>
               </main>

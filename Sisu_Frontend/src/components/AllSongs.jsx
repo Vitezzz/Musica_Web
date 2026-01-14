@@ -15,7 +15,9 @@ export const AllSongs = () => {
 
         try {
             // Borramos en el backend
-            await axios.delete(`http://localhost:3000/api/v1/canciones/deleteCancion/${songId}`);
+            await axios.delete(`http://localhost:3000/api/v1/canciones/deleteCancion/${songId}`,{
+                withCredentials : true
+            });
             
             console.log("Canción borrada ID:", songId);
             

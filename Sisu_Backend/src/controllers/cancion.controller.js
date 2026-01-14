@@ -32,7 +32,7 @@ const crearCancion = async (req,res) => {
             cancionURL, 
             duracion, 
             imagenURL, 
-            user_id: req.user.id
+            user: req.user.id
         })
 
         res.status(201).json({
@@ -48,7 +48,9 @@ const crearCancion = async (req,res) => {
 //Obtiene todas las canciones
 const getCanciones = async (req,res) => {
     try{
-        const canciones = await Cancion.find();
+        const canciones = await Cancion.find({
+            user: req.user.id
+        }).populate('user');
         res.status(200).json(canciones)
     }catch(error){
         res.status(500).json({
@@ -70,7 +72,10 @@ const updateCancion = async (req,res) => {
             datosParaActualizar.cancionURL = `${serverURL}/uploads/${cancionName}`;
         }
 
-        const cancion = await Cancion.findByIdAndUpdate(req.params.id, datosParaActualizar,
+        const cancion = await Cancion.findOneAndUpdate(
+           {_id: req.params.id,
+            user: req.user.id},
+            datosParaActualizar,
             {new: true}
         )
 
@@ -92,7 +97,10 @@ const updateCancion = async (req,res) => {
 //eliminar cancion
 const deleteCancion = async (req,res) => {
     try{
-        const deleted = await Cancion.findByIdAndDelete(req.params.id);
+        const deleted = await Cancion.findOneAndDelete({
+            _id: req.params.id,
+            user: req.user.id
+        })
         if(!deleted) return res.status(404).json({
             message: "cancion no encontrada T-T"
         })

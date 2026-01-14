@@ -21,7 +21,7 @@ export const LoginPage = () => {
         // 4. Llamamos a la función de logueo
         await signIn(values);
 
-        navigate("/")
+        navigate("/AllSongs")
         console.log("Sesión iniciada: " , values)
       }catch(error){
         console.log("Error: ", error)

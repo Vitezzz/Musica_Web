@@ -16,7 +16,9 @@ export const MusicProvider = ({children}) =>{
     const getSongs = async () =>{
             try{
                 //Peticion al backend puente con el bakc
-                const response = await axios.get("http://localhost:3000/api/v1/canciones/getCancion");
+                const response = await axios.get("http://localhost:3000/api/v1/canciones/getCancion", { 
+                    withCredentials : true
+                });
 
                 console.log("Datos recibidos del backend: ", response.data)
 

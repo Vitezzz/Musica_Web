@@ -53,19 +53,23 @@ export const CrearCancion = () => {
         // ==============================
         // MODO EDICIÓN (Tiene ID)
         // ==============================
-        await axios.patch(`http://localhost:3000/api/v1/canciones/updateCancion/${id}`, formData);
+        await axios.patch(`http://localhost:3000/api/v1/canciones/updateCancion/${id}`, formData, {
+          withCredentials: true
+        });
         
         alert("Canción actualizada correctamente :D");
         
         await getSongs(); // Actualizamos la lista
-        navigate("/");    // Nos vamos al inicio
+        navigate("/AllSongs");    // Nos vamos al inicio
 
       } else {
         // ==============================
         // MODO CREACIÓN (No tiene ID)
         // ==============================
         // IMPORTANTE: Este bloque está dentro del ELSE, por eso no se mezcla
-        const respuesta = await axios.post("http://localhost:3000/api/v1/canciones/crearCancion", formData);
+        const respuesta = await axios.post("http://localhost:3000/api/v1/canciones/crearCancion", formData, {
+          withCredentials : true
+        });
         
         console.log("Song guardada con éxito", respuesta.data);
         alert("Canción guardada exitosamente :)");

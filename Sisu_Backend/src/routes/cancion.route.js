@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { crearCancion, deleteCancion, getCanciones, updateCancion } from '../controllers/cancion.controller.js';
+import { authRequired } from "../middlewares/auth.js"
 import upload from '../middlewares/upload.js'
 
 const router = Router();
