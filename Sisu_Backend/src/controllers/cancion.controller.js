@@ -39,6 +39,8 @@ const crearCancion = async (req,res) => {
             message: "Cancion añadida exitosamente :)", cancion
         })
     }catch(error){
+        console.log("💥 Error al crear canción:", error);
+
         res.status(500).json({
             message:"Error interno del servidor"
         })

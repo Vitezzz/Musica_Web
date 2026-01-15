@@ -1,9 +1,11 @@
 import { createContext, useState, useEffect, useContext } from "react";
+import { useAuth } from './AuthContext'
 import axios from "axios";
 
 const MusicContext = createContext();
 
 export const MusicProvider = ({children}) =>{
+    const { isAuthenticated } = useAuth();
 
     const [allSongs, setAllSongs] = useState([]);
     const [currentTrack, setCurrentTrack] = useState(null);
@@ -12,6 +14,14 @@ export const MusicProvider = ({children}) =>{
     const [duration, setDuration]= useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume ]= useState(1);
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            getSongs(); // Si entra, carga SUS canciones
+        } else {
+            setAllSongs([]); //  Si sale, borra la lista de la pantalla
+        }
+    }, [isAuthenticated]);
 
     const getSongs = async () =>{
             try{

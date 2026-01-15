@@ -126,7 +126,7 @@ export const CrearCancion = () => {
            onChange={(e) => setArtista(e.target.value)} 
            required />
           <hr />{" "}
-          <div class="input-group">
+          <div className="input-group">
             <label>
              Subir cancion archivo .mp3:
             </label>

@@ -36,8 +36,8 @@ const registerUser = async (req, res) => {
         //Enviamos la cookie
         res.cookie("token", token ,{
             httpOnly: true, //Por seguridad el navegador no deja que JS(front) toque esta cookie
-            secure: true, //Solo enviar por http
-            sameSite: 'none' //Ayuda con problemas de cookies entre diferentes dominios
+            secure: false, //Solo enviar por http
+            sameSite: 'lax' //Ayuda con problemas de cookies entre diferentes dominios
         })
 
         res.status(201).json({
@@ -87,8 +87,8 @@ const loginUser = async (req, res) => {
         //Enviamos la cookie
         res.cookie("token", token ,{
             httpOnly: true, //Por seguridad el navegador no deja que JS(front) toque esta cookie
-            secure: true, //Solo enviar por http
-            sameSite: 'none' //Ayuda con problemas de cookies entre diferentes dominios
+            secure: false, //Solo enviar por http
+            sameSite: 'lax' //Ayuda con problemas de cookies entre diferentes dominios
         })
 
         res.status(200).json({

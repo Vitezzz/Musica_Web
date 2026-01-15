@@ -5,13 +5,13 @@ import upload from '../middlewares/upload.js'
 
 const router = Router();
 
-router.route("/crearCancion").post(
+router.route("/crearCancion").post(authRequired,
     upload.single('cancion_file'),
     crearCancion);
-router.route("/getCancion").get(getCanciones);
-router.route('/updateCancion/:id').patch(upload.single('cancion_file'),
+router.route("/getCancion").get(authRequired,getCanciones);
+router.route('/updateCancion/:id').patch(authRequired,upload.single('cancion_file'),
 updateCancion);
-router.route('/deleteCancion/:id').delete(deleteCancion);
+router.route('/deleteCancion/:id').delete(authRequired,deleteCancion);
 
 
 export default router;

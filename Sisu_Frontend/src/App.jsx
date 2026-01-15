@@ -25,7 +25,7 @@ function App() {
                 <div>
                   <Routes>
                     <Route element={<ProtectedRoute />}>
-                      <Route path="/Allsongs" element={<AllSongs />} />
+                      <Route path="/AllSongs" element={<AllSongs />} />
                       <Route path="/CrearCancion" element={<CrearCancion />} />
                       <Route
                         path="/editarCancion/:id"

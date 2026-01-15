@@ -1,13 +1,10 @@
 import jwt from 'jsonwebtoken'
-import axios from 'axios'
-
-const API = 'http://localhost:3000/api/v1'
-
-export const verifyTokenRequest = () => axios.get(`${API}/usuarios/verify`,{withCredentials: true});
 
 export const authRequired = (req, res, next) =>{
     try{
         //Buscamos el token en las cookies o en el header
+
+        const { token } = req.cookies;
 
         if(!token) return res.status(401).json({message: "No hay token, autorización denegada"})
 
@@ -21,6 +18,7 @@ export const authRequired = (req, res, next) =>{
         })
 
     }catch(error){
+        console.log("Error en authRequired: ", error)
         return res.status(500).json({message: error.message});
 
     }

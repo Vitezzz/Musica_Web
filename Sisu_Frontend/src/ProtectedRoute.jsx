@@ -8,7 +8,7 @@ export const ProtectedRoute = () => {
   if (loading) return <h1>Cargando...</h1>;
 
   // 2. Verificar: Si terminó de cargar y NO está autenticado -> Al Login
-  if (!loading && !isAuthenticated) return <Navigate to="/login" replace />;
+  if (!loading && !isAuthenticated) return <Navigate to="/" replace />;
 
   // 3. Permitir: Si todo está bien -> Muestra el contenido interno (Outlet)
   return <Outlet />;
